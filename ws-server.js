@@ -95,12 +95,38 @@ app.post("/insert/:database/:collection", async (req, res) => {
 });
 
 // Delete endpoint
+// app.delete("/delete/:database/:collection/:id", async (req, res) => {
+//     try {
+//         const { database, collection, id } = req.params;
+//         const db = client.db(database);
+
+//         const result = await db.collection(collection).deleteOne({ _id: new ObjectId(id) });
+
+//         if (result.deletedCount === 1) {
+//             res.status(200).send(`Document with ID ${id} deleted successfully.`);
+//         } else {
+//             res.status(404).send(`Document with ID ${id} not found.`);
+//         }
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// });
 app.delete("/delete/:database/:collection/:id", async (req, res) => {
     try {
         const { database, collection, id } = req.params;
-        const db = client.db(database);
 
-        const result = await db.collection(collection).deleteOne({ _id: new ObjectId(id) });
+        // Log to check if the ID is valid
+        console.log("Deleting document with ID:", id);
+
+        // Check if the ID is a valid ObjectId (24 hex characters)
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).send("Invalid ID format");
+        }
+
+        const db = client.db(database);
+        const result = await db
+            .collection(collection)
+            .deleteOne({ _id: new ObjectId(id) });
 
         if (result.deletedCount === 1) {
             res.status(200).send(`Document with ID ${id} deleted successfully.`);
@@ -108,9 +134,12 @@ app.delete("/delete/:database/:collection/:id", async (req, res) => {
             res.status(404).send(`Document with ID ${id} not found.`);
         }
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 });
+
+
 // Update endpoint
 app.put("/update/:database/:collection/:id", async (req, res) => {
     try {

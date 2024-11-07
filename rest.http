@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ###
-@id = 67241a6a4e2a597eb02e2e84
+@id = 672d096cd8ce25c8d598f7d1
 DELETE {{domain}}:{{port}}/delete/{{database}}/{{collection}}/{{id}}
 Content-Type: application/json
 
